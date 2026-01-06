@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shalhevet GPA Calculator</title>
+    <title>Shalhevet GPA Tracker</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -146,7 +146,8 @@
     }
 
     function addSemester() {
-        semesters.push({ id: Date.now(), courses: [{ name: '', grade: 'A', credits: 1, isHonors: false }] });
+        // Changed default credits to 0.5
+        semesters.push({ id: Date.now(), courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] });
         render();
         save();
     }
@@ -159,7 +160,8 @@
 
     function addCourse(semId) {
         const sem = semesters.find(s => s.id === semId);
-        sem.courses.push({ name: '', grade: 'A', credits: 1, isHonors: false });
+        // Changed default credits to 0.5
+        sem.courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false });
         render();
         save();
     }
@@ -189,7 +191,6 @@
                 totalCredits += creds;
                 unweightedPoints += (base * creds);
                 
-                // Add 1.0 for honors if the grade is not F (0.00)
                 const weight = (c.isHonors && base > 0) ? 1.0 : 0;
                 weightedPoints += ((base + weight) * creds);
             });
@@ -217,7 +218,7 @@
                         <select onchange="updateCourse(${sem.id}, ${cIdx}, 'grade', this.value)">
                             ${Object.keys(gradeScale).map(g => `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('')}
                         </select>
-                        <input type="number" placeholder="Credits" value="${c.credits}" oninput="updateCourse(${sem.id}, ${cIdx}, 'credits', this.value)">
+                        <input type="number" step="0.1" placeholder="Credits" value="${c.credits}" oninput="updateCourse(${sem.id}, ${cIdx}, 'credits', this.value)">
                         <label style="font-size: 13px; cursor:pointer"><input type="checkbox" ${c.isHonors ? 'checked' : ''} onchange="updateCourse(${sem.id}, ${cIdx}, 'isHonors', this.checked)"> Honors</label>
                         <button class="btn-delete" onclick="deleteCourse(${sem.id}, ${cIdx})">✕</button>
                     </div>
