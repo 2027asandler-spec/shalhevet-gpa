@@ -12,6 +12,7 @@
             --text: #0f172a;
             --danger: #ef4444;
             --success: #10b981;
+            --accent: #6366f1;
         }
 
         body {
@@ -45,9 +46,10 @@
             border: 1px solid rgba(255,255,255,0.5);
         }
 
-        .stat-item { text-align: center; }
+        .stat-item { text-align: center; border-right: 1px solid #e2e8f0; }
+        .stat-item:last-child { border-right: none; }
         .stat-value { font-size: 2rem; font-weight: 800; color: var(--primary); }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; opacity: 0.6; }
+        .stat-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 700; opacity: 0.6; }
 
         .semester-card {
             background: var(--card);
@@ -56,15 +58,30 @@
             margin-bottom: 24px;
             box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
             border: 1px solid #e2e8f0;
+            position: relative;
         }
 
         .sem-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 20px;
             padding-bottom: 10px;
             border-bottom: 2px solid #f8fafc;
+        }
+
+        .sem-title-group h2 { margin: 0; font-size: 1.25rem; }
+        
+        .sem-stats-badge {
+            background: #f8fafc;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: var(--accent);
+            font-weight: 600;
+            border: 1px solid #e2e8f0;
+            margin-top: 5px;
+            display: inline-block;
         }
 
         .course-row {
@@ -93,14 +110,16 @@
 
         .btn-add { background: var(--primary); color: white; }
         .btn-add:hover { opacity: 0.9; }
-        .btn-delete { background: #fee2e2; color: var(--danger); }
+        .btn-delete { background: #fee2e2; color: var(--danger); font-size: 0.8rem; }
         .btn-delete:hover { background: var(--danger); color: white; }
         
-        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 40px; }
+        .controls { display: flex; gap: 12px; justify-content: center; margin-top: 40px; margin-bottom: 60px; }
 
         @media (max-width: 600px) {
             .course-row { grid-template-columns: 1fr; border-bottom: 1px solid #eee; padding-bottom: 15px; }
-            .stats-bar { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: 1fr; gap: 10px; }
+            .stat-item { border-right: none; border-bottom: 1px solid #e2e8f0; padding-bottom: 10px; }
+            .stat-item:last-child { border-bottom: none; }
         }
     </style>
 </head>
@@ -109,17 +128,17 @@
 <div class="container">
     <div class="header">
         <h1>Shalhevet GPA Tracker</h1>
-        <p>Data is stored locally in your browser.</p>
+        <p style="opacity: 0.7;">Cumulative and Semester-specific breakdown.</p>
     </div>
 
     <div class="stats-bar">
         <div class="stat-item">
+            <div class="stat-label">Total Unweighted</div>
             <div class="stat-value" id="overall-unweighted">0.00</div>
-            <div class="stat-label">Unweighted (4.0)</div>
         </div>
         <div class="stat-item">
+            <div class="stat-label">Total Honors (Weighted)</div>
             <div class="stat-value" id="overall-weighted">0.00</div>
-            <div class="stat-label">Honors (5.0)</div>
         </div>
     </div>
 
@@ -127,7 +146,7 @@
 
     <div class="controls">
         <button class="btn-add" onclick="addSemester()">+ New Semester</button>
-        <button style="background: var(--success); color: white;" onclick="copyLink()">🔗 Share URL</button>
+        <button style="background: var(--success); color: white;" onclick="copyLink()">🔗 Copy Link</button>
         <button style="background: #94a3b8; color: white;" onclick="clearAll()">Reset All</button>
     </div>
 </div>
@@ -146,21 +165,21 @@
     }
 
     function addSemester() {
-        // Changed default credits to 0.5
         semesters.push({ id: Date.now(), courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] });
         render();
         save();
     }
 
     function deleteSemester(id) {
-        semesters = semesters.filter(s => s.id !== id);
-        render();
-        save();
+        if(confirm("Delete this entire semester?")) {
+            semesters = semesters.filter(s => s.id !== id);
+            render();
+            save();
+        }
     }
 
     function addCourse(semId) {
         const sem = semesters.find(s => s.id === semId);
-        // Changed default credits to 0.5
         sem.courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false });
         render();
         save();
@@ -185,15 +204,27 @@
         let weightedPoints = 0;
 
         semesters.forEach(sem => {
+            let semCredits = 0;
+            let semUnweighted = 0;
+            let semWeighted = 0;
+
             sem.courses.forEach(c => {
                 const creds = parseFloat(c.credits) || 0;
                 const base = gradeScale[c.grade] || 0;
-                totalCredits += creds;
-                unweightedPoints += (base * creds);
-                
                 const weight = (c.isHonors && base > 0) ? 1.0 : 0;
-                weightedPoints += ((base + weight) * creds);
+
+                semCredits += creds;
+                semUnweighted += (base * creds);
+                semWeighted += ((base + weight) * creds);
             });
+
+            // Store individual semester calcs for the render function
+            sem.gpaUnweighted = semCredits ? (semUnweighted / semCredits).toFixed(2) : "0.00";
+            sem.gpaWeighted = semCredits ? (semWeighted / semCredits).toFixed(2) : "0.00";
+
+            totalCredits += semCredits;
+            unweightedPoints += semUnweighted;
+            weightedPoints += semWeighted;
         });
 
         document.getElementById('overall-unweighted').innerText = totalCredits ? (unweightedPoints / totalCredits).toFixed(2) : "0.00";
@@ -201,6 +232,7 @@
     }
 
     function render() {
+        calculateGPA(); // Ensure calculations are fresh
         const container = document.getElementById('semesters-container');
         container.innerHTML = '';
 
@@ -209,7 +241,12 @@
             div.className = 'semester-card';
             div.innerHTML = `
                 <div class="sem-header">
-                    <h2>Semester ${sIdx + 1}</h2>
+                    <div class="sem-title-group">
+                        <h2>Semester ${sIdx + 1}</h2>
+                        <div class="sem-stats-badge">
+                            Sem GPA: ${sem.gpaUnweighted} (UW) | ${sem.gpaWeighted} (W)
+                        </div>
+                    </div>
                     <button class="btn-delete" onclick="deleteSemester(${sem.id})">Remove Sem</button>
                 </div>
                 ${sem.courses.map((c, cIdx) => `
@@ -227,21 +264,20 @@
             `;
             container.appendChild(div);
         });
-        calculateGPA();
     }
 
     function copyLink() {
-        const dummy = document.createElement('input');
-        document.body.appendChild(dummy);
-        dummy.value = window.location.href;
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        alert("Link copied! Share this URL with others.");
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert("Link copied! Share this URL with others.");
+        });
     }
 
     function clearAll() {
-        if(confirm("Wipe all data?")) { semesters = []; render(); save(); }
+        if(confirm("This will wipe all your saved grades. Are you sure?")) {
+            semesters = [];
+            addSemester();
+            save();
+        }
     }
 
     if(semesters.length === 0) addSemester(); else render();
