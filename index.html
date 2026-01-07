@@ -8,7 +8,7 @@
     <style>
         :root { --fire-red: #cc0000; --black: #1a1a1a; --white: #ffffff; --bg: #f4f4f4; --border: #d1d1d1; --text-muted: #666666; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--black); margin: 0; padding: 20px; line-height: 1.5; }
-        .container { max-width: 1000px; margin: 40px auto; }
+        .container { max-width: 1050px; margin: 40px auto; }
         
         /* Sticky Dashboard */
         .stats-bar { position: sticky; top: 20px; background: var(--black); padding: 25px; border-radius: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; z-index: 1000; box-shadow: 0 15px 30px rgba(0,0,0,0.2); color: var(--white); }
@@ -22,21 +22,24 @@
 
         .semester-card { background: var(--white); border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .sem-header { background: #fdfdfd; padding: 15px 32px; border-bottom: 2px solid var(--bg); display: flex; justify-content: space-between; align-items: center; }
-        .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; margin-bottom: 4px; }
+        .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; margin-bottom: 6px; }
         .select-styled { background: var(--white); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; font-weight: 600; font-family: inherit; }
 
         .courses-container { padding: 25px 32px; }
-        .course-row { display: grid; grid-template-columns: 3.5fr 110px 100px 85px 40px; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
-        input, select { background: var(--white); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; }
+        /* FIXED: Added explicit 25px gap between columns */
+        .course-row { display: grid; grid-template-columns: 3.5fr 120px 100px 90px 40px; gap: 25px; margin-bottom: 20px; align-items: flex-end; }
+        
+        input, select { background: var(--white); border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
 
-        .weight-toggle { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); height: 40px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 800; color: var(--text-muted); }
+        .weight-toggle { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); height: 44px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 800; color: var(--text-muted); background: #f9f9f9; }
         .weight-toggle:has(input:checked) { background: var(--fire-red); border-color: var(--fire-red); color: white; }
         .weight-toggle input { display: none; }
 
         button { cursor: pointer; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 700; transition: 0.2s; }
-        .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 15px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
-        .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; }
-        .btn-delete { color: var(--text-muted); background: none; font-size: 1.1rem; }
+        .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 18px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
+        .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; padding: 12px; }
+        .btn-delete { color: var(--text-muted); background: none; font-size: 1.2rem; height: 44px; display: flex; align-items: center; justify-content: center; }
+        .btn-delete:hover { color: var(--fire-red); }
 
         .info-section { background: var(--white); border-radius: 20px; padding: 40px; border: 1px solid var(--border); margin-top: 20px; }
         .info-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
@@ -49,8 +52,8 @@
 
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">TRACKER</span></h1>
-        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Official Shalhevet Standards</p>
+        <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">GPA TRACKER</span></h1>
+        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Shalhevet High School</p>
     </div>
 
     <div class="stats-bar">
@@ -70,7 +73,7 @@
                     <li style="margin-bottom: 10px;"><b style="color: var(--black);">Weighted (WT):</b> Grants an extra 1.0 point to SAS and Honors courses.</li>
                     <li style="margin-bottom: 10px;"><b style="color: var(--black);">Advanced Track:</b> Noted as unweighted per school policy.</li>
                 </ul>
-                <p style="font-size: 0.75rem; font-style: italic; margin-top: 20px; border-top: 1px solid #eee; pt: 10px;"><b>Disclaimer:</b> Planning purposes only. Official GPA is determined by your transcript.</p>
+                <p style="font-size: 0.75rem; font-style: italic; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;"><b>Disclaimer:</b> Planning purposes only. Official GPA is determined by the your transcript.</p>
             </div>
             <div>
                 <table class="gpa-chart">
@@ -94,10 +97,10 @@
 <script>
     const gradeScale = { "A+": 4.0, "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "F": 0.0 };
     const years = ["9th Grade", "10th Grade", "11th Grade", "12th Grade"];
-    let semesters = JSON.parse(localStorage.getItem('shalhevet_master_v12')) || [];
+    let semesters = JSON.parse(localStorage.getItem('shalhevet_master_v13')) || [];
 
     function save() {
-        localStorage.setItem('shalhevet_master_v12', JSON.stringify(semesters));
+        localStorage.setItem('shalhevet_master_v13', JSON.stringify(semesters));
         calculate();
     }
 
