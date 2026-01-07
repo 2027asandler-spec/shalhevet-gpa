@@ -19,7 +19,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--black); margin: 0; padding: 20px; line-height: 1.5; }
         .container { max-width: 1000px; margin: 40px auto; }
         
-        /* Main Dashboard */
+        /* Stats Dashboard */
         .stats-bar { 
             position: sticky; top: 20px; background: var(--black); 
             padding: 25px; border-radius: 20px; 
@@ -33,17 +33,16 @@
         .stat-value { font-size: 2.8rem; font-weight: 800; color: var(--fire-red); line-height: 1; margin-bottom: 5px; }
         .stat-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.15em; }
 
-        /* Yearly Summary Indicator */
+        /* Yearly Summary Logic */
         .year-summary-bar {
-            background: var(--white); border: 2px solid var(--black);
-            padding: 12px 25px; border-radius: 12px; margin-bottom: 15px;
+            background: #e2e2e2; border: 2px solid var(--black);
+            padding: 15px 25px; border-radius: 12px; margin: -10px 0 35px 0;
             display: flex; justify-content: space-between; align-items: center;
-            font-weight: 800; font-size: 0.9rem; text-transform: uppercase;
+            font-weight: 800; font-size: 0.95rem; text-transform: uppercase;
         }
         .year-summary-bar span { color: var(--fire-red); }
 
-        /* Semester Card */
-        .semester-card { background: var(--white); border-radius: 20px; padding: 0; margin-bottom: 35px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        .semester-card { background: var(--white); border-radius: 20px; padding: 0; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .sem-header { background: #fdfdfd; padding: 15px 32px; border-bottom: 2px solid var(--bg); display: flex; justify-content: space-between; align-items: center; }
         
         .sem-title-group { display: flex; gap: 30px; align-items: center; }
@@ -51,28 +50,32 @@
         .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; letter-spacing: 0.05em; }
 
         .select-styled { background: var(--white); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; }
-
         .sem-badge { background: #eee; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #ccc; }
 
-        /* Course Row - Extra wide name field */
         .courses-container { padding: 25px 32px; }
         .course-row { display: grid; grid-template-columns: 3.5fr 110px 85px 85px 40px; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
         
         input, select { background: var(--white); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
-        input[type="text"] { font-weight: 500; }
 
-        /* WT / REG Toggle */
         .weight-toggle { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); height: 40px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 800; color: var(--text-muted); transition: 0.2s; }
         .weight-toggle:has(input:checked) { background: var(--fire-red); border-color: var(--fire-red); color: white; }
         .weight-toggle input { display: none; }
 
         button { font-family: inherit; cursor: pointer; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 700; transition: 0.2s; }
-        .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 15px; font-size: 1rem; text-transform: uppercase; }
+        .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 15px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
         .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; }
         .btn-delete { color: var(--text-muted); background: none; font-size: 1.1rem; height: 40px; }
         .btn-delete:hover { color: var(--fire-red); }
 
-        .controls { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-top: 30px; }
+        .controls { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-top: 30px; border-bottom: 2px solid var(--border); padding-bottom: 40px; margin-bottom: 40px; }
+
+        /* System Info Section */
+        .info-section { background: var(--white); border-radius: 20px; padding: 40px; border: 1px solid var(--border); }
+        .info-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
+        .gpa-chart { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
+        .gpa-chart th { text-align: left; padding: 12px; border-bottom: 2px solid var(--fire-red); font-weight: 800; text-transform: uppercase; }
+        .gpa-chart td { padding: 10px; border-bottom: 1px solid var(--bg); }
+        .disclaimer { font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--bg); }
     </style>
 </head>
 <body>
@@ -80,7 +83,7 @@
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">TRACKER</span></h1>
-        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Shalhevet High School</p>
+        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall School Year</p>
     </div>
 
     <div class="stats-bar">
@@ -88,13 +91,44 @@
         <div class="stat-item"><div class="stat-label">Cumulative Weighted</div><div class="stat-value" id="overall-weighted">0.00</div></div>
     </div>
 
-    <div id="year-indicators"></div>
-    <div id="semesters-container"></div>
+    <div id="main-content"></div>
 
     <div class="controls">
         <button class="btn-add-sem" onclick="addSemester()">+ Add New Semester</button>
         <button style="background: var(--black); color: white;" onclick="copyLink()">Share Link</button>
         <button style="background: white; color: var(--black); border: 1px solid var(--black);" onclick="clearAll()">Reset All</button>
+    </div>
+
+    <div class="info-section">
+        <div class="info-grid">
+            <div>
+                <h3 style="margin-top:0; color: var(--fire-red);">How the System Works</h3>
+                <p style="font-size: 0.9rem;">This tracker follows the <b>Shalhevet High School</b> official grading standards. It calculates your GPA by multiplying the point value of each grade by the credits earned, then dividing by the total credits attempted.</p>
+                <ul style="font-size: 0.9rem; padding-left: 20px;">
+                    <li><b>Unweighted (UW):</b> Based on a standard 4.0 scale.</li>
+                    <li><b>Weighted (W):</b> Grants an extra 1.0 point to <b>SAS</b> and <b>Honors</b> courses for grades of C- or higher.</li>
+                    <li><b>Advanced Track:</b> Noted as unweighted per school policy.</li>
+                </ul>
+            </div>
+            <div>
+                <table class="gpa-chart">
+                    <thead><tr><th>Grade</th><th>Unweighted</th><th>SAS/Honors</th></tr></thead>
+                    <tbody>
+                        <tr><td>A / A+</td><td>4.00</td><td>5.00</td></tr>
+                        <tr><td>A-</td><td>3.67</td><td>4.67</td></tr>
+                        <tr><td>B+</td><td>3.33</td><td>4.33</td></tr>
+                        <tr><td>B</td><td>3.00</td><td>4.00</td></tr>
+                        <tr><td>B-</td><td>2.67</td><td>3.67</td></tr>
+                        <tr><td>C+</td><td>2.33</td><td>3.33</td></tr>
+                        <tr><td>C</td><td>2.00</td><td>3.00</td></tr>
+                        <tr><td>C-</td><td>1.67</td><td>2.67</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="disclaimer">
+            <b>Disclaimer:</b> This tool is for personal planning and estimation only. Official GPAs are calculated and verified exclusively by the Shalhevet Registrar. Individual course weights and credit values are subject to change based on the current course catalog.
+        </div>
     </div>
 </div>
 
@@ -105,16 +139,16 @@
     const gradeScale = { "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "F": 0.0 };
     const years = ["9th Grade", "10th Grade", "11th Grade", "12th Grade"];
 
-    let semesters = JSON.parse(localStorage.getItem('shalhevet_vFinal')) || [];
+    let semesters = JSON.parse(localStorage.getItem('shalhevet_vFinal_v3')) || [];
 
     function save() {
-        localStorage.setItem('shalhevet_vFinal', JSON.stringify(semesters));
+        localStorage.setItem('shalhevet_vFinal_v3', JSON.stringify(semesters));
         calculateAndRender();
     }
 
     function addSemester() {
         const lastYear = semesters.length > 0 ? semesters[semesters.length-1].year : years[0];
-        semesters.push({ id: Date.now(), year: lastYear, term: "Semester 1", courses: [{ name: '', grade: 'A', credits: 1.0, isHonors: false }] });
+        semesters.push({ id: Date.now(), year: lastYear, term: "Semester 1", courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] });
         save();
     }
 
@@ -154,77 +188,82 @@
         document.getElementById('overall-unweighted').innerText = totalCredits ? (totalUwPts / totalCredits).toFixed(2) : "0.00";
         document.getElementById('overall-weighted').innerText = totalCredits ? (totalWPts / totalCredits).toFixed(2) : "0.00";
 
-        // Render Year Bars
-        const yearBox = document.getElementById('year-indicators');
-        yearBox.innerHTML = years.map(y => {
-            if (!yearStats[y]) return '';
-            const yUw = (yearStats[y].uw / yearStats[y].creds).toFixed(2);
-            const yW = (yearStats[y].w / yearStats[y].creds).toFixed(2);
-            return `<div class="year-summary-bar">${y} GPA <span>UW: ${yUw} | W: ${yW}</span></div>`;
-        }).join('');
-
-        renderSemesters();
+        renderMainContent(yearStats);
     }
 
-    function renderSemesters() {
-        const container = document.getElementById('semesters-container');
+    function renderMainContent(yearStats) {
+        const container = document.getElementById('main-content');
         container.innerHTML = '';
-        semesters.forEach(sem => {
-            const div = document.createElement('div');
-            div.className = 'semester-card';
-            div.innerHTML = `
-                <div class="sem-header">
-                    <div class="sem-title-group">
-                        <div class="selector-box"><span class="selector-label">Grade</span>
-                            <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
-                                ${years.map(y => `<option value="${y}" ${sem.year === y ? 'selected' : ''}>${y}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div class="selector-box"><span class="selector-label">Term</span>
-                            <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'term', this.value)">
-                                <option ${sem.term === 'Semester 1' ? 'selected' : ''}>Semester 1</option>
-                                <option ${sem.term === 'Semester 2' ? 'selected' : ''}>Semester 2</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display:flex; gap:10px; align-items:center">
-                        <div class="sem-badge">Sem UW: ${sem.semUw}</div>
-                        <div class="sem-badge">Sem W: ${sem.semW}</div>
-                        <button class="btn-delete" onclick="deleteSem(${sem.id})">✕</button>
-                    </div>
-                </div>
-                <div class="courses-container">
-                    ${sem.courses.map((c, i) => `
-                        <div class="course-row">
-                            <div class="selector-box"><span class="selector-label">Course Name</span>
-                                <input type="text" list="course-list" value="${c.name}" onchange="updateCourse(${sem.id}, ${i}, 'name', this.value)">
-                            </div>
+
+        years.forEach(year => {
+            const yearSems = semesters.filter(s => s.year === year);
+            if (yearSems.length === 0) return;
+
+            yearSems.forEach(sem => {
+                const semDiv = document.createElement('div');
+                semDiv.className = 'semester-card';
+                semDiv.innerHTML = `
+                    <div class="sem-header">
+                        <div class="sem-title-group">
                             <div class="selector-box"><span class="selector-label">Grade</span>
-                                <select onchange="updateCourse(${sem.id}, ${i}, 'grade', this.value)">
-                                    ${Object.keys(gradeScale).map(g => `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('')}
+                                <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
+                                    ${years.map(y => `<option value="${y}" ${sem.year === y ? 'selected' : ''}>${y}</option>`).join('')}
                                 </select>
                             </div>
-                            <div class="selector-box"><span class="selector-label">Credits</span>
-                                <input type="number" step="0.1" value="${c.credits}" oninput="updateCourse(${sem.id}, ${i}, 'credits', this.value)">
+                            <div class="selector-box"><span class="selector-label">Term</span>
+                                <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'term', this.value)">
+                                    <option ${sem.term === 'Semester 1' ? 'selected' : ''}>Semester 1</option>
+                                    <option ${sem.term === 'Semester 2' ? 'selected' : ''}>Semester 2</option>
+                                </select>
                             </div>
-                            <div class="selector-box"><span class="selector-label">Weight</span>
-                                <label class="weight-toggle">
-                                    <input type="checkbox" ${c.isHonors ? 'checked' : ''} onchange="updateCourse(${sem.id}, ${i}, 'isHonors', this.checked)">
-                                    ${c.isHonors ? 'WT' : 'REG'}
-                                </label>
-                            </div>
-                            <button class="btn-delete" onclick="deleteCourse(${sem.id}, ${i})">✕</button>
                         </div>
-                    `).join('')}
-                    <button class="btn-add-course" onclick="addCourse(${sem.id})">+ Add Course</button>
-                </div>`;
-            container.appendChild(div);
+                        <div style="display:flex; gap:10px; align-items:center">
+                            <div class="sem-badge">Sem UW: ${sem.semUw}</div>
+                            <div class="sem-badge">Sem W: ${sem.semW}</div>
+                            <button class="btn-delete" onclick="deleteSem(${sem.id})">✕</button>
+                        </div>
+                    </div>
+                    <div class="courses-container">
+                        ${sem.courses.map((c, i) => `
+                            <div class="course-row">
+                                <div class="selector-box"><span class="selector-label">Course Name</span>
+                                    <input type="text" list="course-list" value="${c.name}" onchange="updateCourse(${sem.id}, ${i}, 'name', this.value)">
+                                </div>
+                                <div class="selector-box"><span class="selector-label">Grade</span>
+                                    <select onchange="updateCourse(${sem.id}, ${i}, 'grade', this.value)">
+                                        ${Object.keys(gradeScale).map(g => `<option value="${g}" ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('')}
+                                    </select>
+                                </div>
+                                <div class="selector-box"><span class="selector-label">Credits</span>
+                                    <input type="number" step="0.1" value="${c.credits}" oninput="updateCourse(${sem.id}, ${i}, 'credits', this.value)">
+                                </div>
+                                <div class="selector-box"><span class="selector-label">Weight</span>
+                                    <label class="weight-toggle">
+                                        <input type="checkbox" ${c.isHonors ? 'checked' : ''} onchange="updateCourse(${sem.id}, ${i}, 'isHonors', this.checked)">
+                                        ${c.isHonors ? 'WT' : 'REG'}
+                                    </label>
+                                </div>
+                                <button class="btn-delete" onclick="deleteCourse(${sem.id}, ${i})">✕</button>
+                            </div>
+                        `).join('')}
+                        <button class="btn-add-course" onclick="addCourse(${sem.id})">+ Add Course</button>
+                    </div>`;
+                container.appendChild(semDiv);
+            });
+
+            const yUw = (yearStats[year].uw / yearStats[year].creds).toFixed(2);
+            const yW = (yearStats[year].w / yearStats[year].creds).toFixed(2);
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'year-summary-bar';
+            summaryDiv.innerHTML = `${year} TOTAL GPA <span>UW: ${yUw} | W: ${yW}</span>`;
+            container.appendChild(summaryDiv);
         });
+
         document.getElementById('course-list').innerHTML = schoolCourses.map(c => `<option value="${c}">`).join('');
     }
 
     function updateSemInfo(id, f, v) { semesters.find(s => s.id === id)[f] = v; save(); }
-    function addCourse(id) { semesters.find(s => s.id === id).courses.push({ name: '', grade: 'A', credits: 1.0, isHonors: false }); save(); }
+    function addCourse(id) { semesters.find(s => s.id === id).courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false }); save(); }
     function deleteCourse(id, i) { semesters.find(s => s.id === id).courses.splice(i, 1); save(); }
     function deleteSem(id) { if(confirm("Delete semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
     function copyLink() { navigator.clipboard.writeText(window.location.href); alert("Link Copied!"); }
