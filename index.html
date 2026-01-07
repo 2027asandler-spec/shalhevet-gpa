@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shalhevet GPA Tracker | Master Verified</title>
+    <title>Shalhevet GPA Tracker | Official 25-26</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
     <style>
         :root { --fire-red: #cc0000; --black: #1a1a1a; --white: #ffffff; --bg: #f4f4f4; --border: #d1d1d1; --text-muted: #666666; }
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--black); margin: 0; padding: 20px; line-height: 1.5; }
         .container { max-width: 1050px; margin: 40px auto; }
         
-        /* Sticky Dashboard */
         .stats-bar { position: sticky; top: 20px; background: var(--black); padding: 25px; border-radius: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; z-index: 1000; box-shadow: 0 15px 30px rgba(0,0,0,0.2); color: var(--white); }
         .stat-item { text-align: center; border-right: 1px solid #444; }
         .stat-item:last-child { border-right: none; }
@@ -26,7 +25,6 @@
         .select-styled { background: var(--white); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; font-weight: 600; font-family: inherit; }
 
         .courses-container { padding: 25px 32px; }
-        /* FIXED: Added explicit 25px gap between columns */
         .course-row { display: grid; grid-template-columns: 3.5fr 120px 100px 90px 40px; gap: 25px; margin-bottom: 20px; align-items: flex-end; }
         
         input, select { background: var(--white); border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
@@ -35,11 +33,14 @@
         .weight-toggle:has(input:checked) { background: var(--fire-red); border-color: var(--fire-red); color: white; }
         .weight-toggle input { display: none; }
 
+        .sem-stats-display { display: flex; gap: 15px; align-items: center; background: #f1f1f1; padding: 5px 15px; border-radius: 30px; border: 1px solid #ddd; }
+        .sem-stat-pill { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; color: var(--black); }
+        .sem-stat-pill span { color: var(--fire-red); margin-left: 4px; }
+
         button { cursor: pointer; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 700; transition: 0.2s; }
         .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 18px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
         .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; padding: 12px; }
         .btn-delete { color: var(--text-muted); background: none; font-size: 1.2rem; height: 44px; display: flex; align-items: center; justify-content: center; }
-        .btn-delete:hover { color: var(--fire-red); }
 
         .info-section { background: var(--white); border-radius: 20px; padding: 40px; border: 1px solid var(--border); margin-top: 20px; }
         .info-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
@@ -133,8 +134,8 @@
     <option value="Hebrew Language">
     <option value="Israeli Culture & Conversation">
     <option value="Hebrew Film & Literature (SAS)">
-</datalist>    
-    
+</datalist>
+
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">TRACKER</span></h1>
@@ -158,9 +159,10 @@
                     <li style="margin-bottom: 10px;"><b style="color: var(--black);">Weighted (WT):</b> Grants an extra 1.0 point to SAS and Honors courses.</li>
                     <li style="margin-bottom: 10px;"><b style="color: var(--black);">Advanced Track:</b> Noted as unweighted per school policy.</li>
                 </ul>
-                <p style="font-size: 0.75rem; font-style: italic; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;"><b>Disclaimer:</b> Planning purposes only. Official GPA is determined by the your transcript.</p>
+                <p style="font-size: 0.75rem; font-style: italic; margin-top: 20px; border-top: 1px solid #eee; padding-top: 10px;"><b>Disclaimer:</b> Planning purposes only. Official GPA is determined by your transcript.</p>
             </div>
             <div>
+                
                 <table class="gpa-chart">
                     <thead><tr><th>Grade</th><th>UW Pts</th><th>SAS/Honors</th></tr></thead>
                     <tbody>
@@ -182,10 +184,10 @@
 <script>
     const gradeScale = { "A+": 4.0, "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "F": 0.0 };
     const years = ["9th Grade", "10th Grade", "11th Grade", "12th Grade"];
-    let semesters = JSON.parse(localStorage.getItem('shalhevet_master_v13')) || [];
+    let semesters = JSON.parse(localStorage.getItem('shalhevet_final_v1')) || [];
 
     function save() {
-        localStorage.setItem('shalhevet_master_v13', JSON.stringify(semesters));
+        localStorage.setItem('shalhevet_final_v1', JSON.stringify(semesters));
         calculate();
     }
 
@@ -195,13 +197,17 @@
 
     function addSemester() {
         const lastYear = semesters.length > 0 ? semesters[semesters.length-1].year : years[0];
-        semesters.push({ id: Date.now(), year: lastYear, term: "Semester 1", courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] });
+        semesters.push({ id: Date.now(), year: lastYear, courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] });
         save();
     }
 
     function updateCourse(semId, idx, field, value) {
         const sem = semesters.find(s => s.id === semId);
         sem.courses[idx][field] = value;
+        if (field === 'name') {
+            const val = value.toUpperCase();
+            if (val.includes('SAS') || val.includes('HONORS')) sem.courses[idx].isHonors = true;
+        }
         save();
     }
 
@@ -241,23 +247,17 @@
                 div.className = 'semester-card';
                 div.innerHTML = `
                     <div class="sem-header">
-                        <div style="display:flex; gap:15px; align-items:center;">
-                            <div style="display:flex; flex-direction:column;">
-                                <span class="selector-label">Grade</span>
-                                <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
-                                    ${years.map(yr => `<option value="${yr}" ${sem.year === yr ? 'selected' : ''}>${yr}</option>`).join('')}
-                                </select>
-                            </div>
-                            <div style="display:flex; flex-direction:column;">
-                                <span class="selector-label">Term</span>
-                                <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'term', this.value)">
-                                    <option ${sem.term === 'Semester 1' ? 'selected' : ''}>Semester 1</option>
-                                    <option ${sem.term === 'Semester 2' ? 'selected' : ''}>Semester 2</option>
-                                </select>
-                            </div>
+                        <div style="display:flex; flex-direction:column;">
+                            <span class="selector-label">Grade Level</span>
+                            <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
+                                ${years.map(yr => `<option value="${yr}" ${sem.year === yr ? 'selected' : ''}>${yr}</option>`).join('')}
+                            </select>
                         </div>
-                        <div style="display:flex; gap:10px; align-items:center">
-                            <div class="sem-badge">UW: ${formatGPA(sem.resUw)}</div>
+                        <div style="display:flex; gap:10px; align-items:center;">
+                            <div class="sem-stats-display">
+                                <div class="sem-stat-pill">REG: <span>${formatGPA(sem.resUw)}</span></div>
+                                <div class="sem-stat-pill">WT: <span>${formatGPA(sem.resW)}</span></div>
+                            </div>
                             <button class="btn-delete" onclick="deleteSem(${sem.id})">✕</button>
                         </div>
                     </div>
@@ -265,7 +265,7 @@
                         ${sem.courses.map((c, i) => `
                             <div class="course-row">
                                 <div style="display:flex; flex-direction:column;"><span class="selector-label">Course Name</span>
-                                    <input type="text" value="${c.name}" onchange="updateCourse(${sem.id}, ${i}, 'name', this.value)">
+                                    <input type="text" list="course-catalog" value="${c.name}" onchange="updateCourse(${sem.id}, ${i}, 'name', this.value)" placeholder="Search...">
                                 </div>
                                 <div style="display:flex; flex-direction:column;"><span class="selector-label">Grade</span>
                                     <select onchange="updateCourse(${sem.id}, ${i}, 'grade', this.value)">
@@ -282,7 +282,7 @@
                                 <div style="display:flex; flex-direction:column;"><span class="selector-label">Weight</span>
                                     <label class="weight-toggle">
                                         <input type="checkbox" ${c.isHonors ? 'checked' : ''} onchange="updateCourse(${sem.id}, ${i}, 'isHonors', this.checked)">
-                                        ${c.isHonors ? 'WT' : 'REG'}
+                                        ${c.isHonors ? 'SAS/HON' : 'REGULAR'}
                                     </label>
                                 </div>
                                 <button class="btn-delete" onclick="deleteCourse(${sem.id}, ${i})">✕</button>
@@ -302,7 +302,7 @@
     function updateSemInfo(id, f, v) { semesters.find(s => s.id === id)[f] = v; save(); }
     function addCourse(id) { semesters.find(s => s.id === id).courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false }); save(); }
     function deleteCourse(id, i) { semesters.find(s => s.id === id).courses.splice(i, 1); save(); }
-    function deleteSem(id) { if(confirm("Delete semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
+    function deleteSem(id) { if(confirm("Delete this semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
     
     if(!semesters.length) addSemester(); else calculate();
 </script>
