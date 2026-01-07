@@ -196,23 +196,40 @@
         save();
     }
 
-    function calculateGPA() {
-        let totalCredits = 0, uwPoints = 0, wPoints = 0;
+function calculateGPA() {
+        let totalCredits = 0, totalUwPoints = 0, totalWPoints = 0;
+
         semesters.forEach(sem => {
             let sCreds = 0, sUw = 0, sW = 0;
             sem.courses.forEach(c => {
                 const creds = parseFloat(c.credits) || 0;
-                const base = gradeScale[c.grade] || 0;
+                const baseValue = gradeScale[c.grade] || 0;
+                
                 sCreds += creds;
-                sUw += (base * creds);
-                sW += ((base + (c.isHonors && base >= 1.67 ? 1.0 : 0)) * creds);
+                sUw += (baseValue * creds);
+                
+                // Weight only applies to Honors/SAS, not "Advanced"
+                const weight = (c.isHonors && baseValue >= 1.67) ? 1.0 : 0;
+                sW += ((baseValue + weight) * creds);
             });
+            
+            // This rounds the LITTLE box on the semester card
             sem.sUw = sCreds ? (sUw / sCreds).toFixed(2) : "0.00";
             sem.sW = sCreds ? (sW / sCreds).toFixed(2) : "0.00";
-            totalCredits += sCreds; uwPoints += sUw; wPoints += sW;
+            
+            // IMPORTANT: These add the RAW unrounded numbers to the total pool
+            totalCredits += sCreds;
+            totalUwPoints += sUw;
+            totalWPoints += sW;
         });
-        document.getElementById('overall-unweighted').innerText = totalCredits ? (uwPoints / totalCredits).toFixed(2) : "0.00";
-        document.getElementById('overall-weighted').innerText = totalCredits ? (wPoints / totalCredits).toFixed(2) : "0.00";
+
+        // FINAL ROUNDING: This happens only once at the very end.
+        // This turns a 3.816 into a 3.82 instead of a 3.81.
+        const finalUw = totalCredits ? (totalUwPoints / totalCredits).toFixed(2) : "0.00";
+        const finalW = totalCredits ? (totalWPoints / totalCredits).toFixed(2) : "0.00";
+
+        document.getElementById('overall-unweighted').innerText = finalUw;
+        document.getElementById('overall-weighted').innerText = finalW;
     }
 
     function render() {
