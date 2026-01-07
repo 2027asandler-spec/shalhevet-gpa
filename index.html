@@ -197,31 +197,30 @@
     }
 
 function calculateGPA() {
-        let totalCredits = 0, totalUwPoints = 0, totalWPoints = 0;
+    let totalCredits = 0;
+    let totalPoints = 0;
 
-        semesters.forEach(sem => {
-            let sCreds = 0, sUw = 0, sW = 0;
-            sem.courses.forEach(c => {
-                const creds = parseFloat(c.credits) || 0;
-                const baseValue = gradeScale[c.grade] || 0;
-                
-                sCreds += creds;
-                sUw += (baseValue * creds);
-                
-                // Weight only applies to Honors/SAS, not "Advanced"
-                const weight = (c.isHonors && baseValue >= 1.67) ? 1.0 : 0;
-                sW += ((baseValue + weight) * creds);
-            });
+    semesters.forEach(sem => {
+        sem.courses.forEach(c => {
+            const creds = parseFloat(c.credits) || 0;
+            const baseValue = gradeScale[c.grade] || 0;
             
-            // This rounds the LITTLE box on the semester card
-            sem.sUw = sCreds ? (sUw / sCreds).toFixed(2) : "0.00";
-            sem.sW = sCreds ? (sW / sCreds).toFixed(2) : "0.00";
+            // Only Honors, SAS, or AGS receive the +1.0 boost
+            const isWeighted = c.name.includes("Honors") || 
+                               c.name.includes("SAS") || 
+                               c.name.includes("AGS");
             
-            // IMPORTANT: These add the RAW unrounded numbers to the total pool
-            totalCredits += sCreds;
-            totalUwPoints += sUw;
-            totalWPoints += sW;
+            const weight = (isWeighted && baseValue >= 1.67) ? 1.0 : 0;
+            
+            totalCredits += creds;
+            totalPoints += (baseValue + weight) * creds;
         });
+    });
+
+    // Final rounding happens ONLY here to prevent 3.81 vs 3.82 errors
+    const finalGPA = totalCredits ? (totalPoints / totalCredits).toFixed(2) : "0.00";
+    document.getElementById('overall-weighted').innerText = finalGPA;
+}
 
         // FINAL ROUNDING: This happens only once at the very end.
         // This turns a 3.816 into a 3.82 instead of a 3.81.
