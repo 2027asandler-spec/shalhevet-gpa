@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shalhevet GPA Tracker</title>
+    <title>Shalhevet GPA Tracker | Verified v5</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
     <style>
         :root { 
             --fire-red: #cc0000; 
-            --dark-red: #a30000;
             --black: #1a1a1a; 
             --white: #ffffff;
             --bg: #f4f4f4; 
@@ -19,7 +18,7 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--black); margin: 0; padding: 20px; line-height: 1.5; }
         .container { max-width: 1000px; margin: 40px auto; }
         
-        /* Stats Dashboard */
+        /* Cumulative Header */
         .stats-bar { 
             position: sticky; top: 20px; background: var(--black); 
             padding: 25px; border-radius: 20px; 
@@ -33,7 +32,7 @@
         .stat-value { font-size: 2.8rem; font-weight: 800; color: var(--fire-red); line-height: 1; margin-bottom: 5px; }
         .stat-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.15em; }
 
-        /* Yearly Summary Logic */
+        /* Yearly Summary Logic (Appears after semesters) */
         .year-summary-bar {
             background: #e2e2e2; border: 2px solid var(--black);
             padding: 15px 25px; border-radius: 12px; margin: -10px 0 35px 0;
@@ -42,25 +41,28 @@
         }
         .year-summary-bar span { color: var(--fire-red); }
 
-        .semester-card { background: var(--white); border-radius: 20px; padding: 0; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        /* Semester UI */
+        .semester-card { background: var(--white); border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .sem-header { background: #fdfdfd; padding: 15px 32px; border-bottom: 2px solid var(--bg); display: flex; justify-content: space-between; align-items: center; }
         
-        .sem-title-group { display: flex; gap: 30px; align-items: center; }
+        .sem-title-group { display: flex; gap: 20px; align-items: center; }
         .selector-box { display: flex; flex-direction: column; gap: 4px; }
-        .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; letter-spacing: 0.05em; }
-
+        .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; }
         .select-styled { background: var(--white); border: 1px solid var(--border); padding: 6px 10px; border-radius: 8px; font-weight: 600; font-size: 0.85rem; }
         .sem-badge { background: #eee; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; border: 1px solid #ccc; }
 
+        /* Course Layout */
         .courses-container { padding: 25px 32px; }
         .course-row { display: grid; grid-template-columns: 3.5fr 110px 85px 85px 40px; gap: 15px; margin-bottom: 15px; align-items: flex-end; }
         
         input, select { background: var(--white); border: 1px solid var(--border); padding: 10px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
 
+        /* Weight Button */
         .weight-toggle { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); height: 40px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 800; color: var(--text-muted); transition: 0.2s; }
         .weight-toggle:has(input:checked) { background: var(--fire-red); border-color: var(--fire-red); color: white; }
         .weight-toggle input { display: none; }
 
+        /* Actions */
         button { font-family: inherit; cursor: pointer; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 700; transition: 0.2s; }
         .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 15px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
         .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; }
@@ -69,13 +71,12 @@
 
         .controls { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 15px; margin-top: 30px; border-bottom: 2px solid var(--border); padding-bottom: 40px; margin-bottom: 40px; }
 
-        /* System Info Section */
+        /* Info & Chart */
         .info-section { background: var(--white); border-radius: 20px; padding: 40px; border: 1px solid var(--border); }
         .info-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; }
         .gpa-chart { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
         .gpa-chart th { text-align: left; padding: 12px; border-bottom: 2px solid var(--fire-red); font-weight: 800; text-transform: uppercase; }
         .gpa-chart td { padding: 10px; border-bottom: 1px solid var(--bg); }
-        .disclaimer { font-size: 0.75rem; color: var(--text-muted); line-height: 1.6; margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--bg); }
     </style>
 </head>
 <body>
@@ -83,7 +84,7 @@
 <div class="container">
     <div style="text-align: center; margin-bottom: 30px;">
         <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">TRACKER</span></h1>
-        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Shalhevet High School</p>
+        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Overall School Year</p>
     </div>
 
     <div class="stats-bar">
@@ -102,17 +103,17 @@
     <div class="info-section">
         <div class="info-grid">
             <div>
-                <h3 style="margin-top:0; color: var(--fire-red);">How the System Works</h3>
-                <p style="font-size: 0.9rem;">This tracker follows the <b>Shalhevet High School</b> official grading standards. It calculates your GPA by multiplying the point value of each grade by the credits earned, then dividing by the total credits attempted.</p>
-                <ul style="font-size: 0.9rem; padding-left: 20px;">
-                    <li><b>Unweighted (UW):</b> Based on a standard 4.0 scale.</li>
-                    <li><b>Weighted (W):</b> Grants an extra 1.0 point to <b>SAS</b> and <b>Honors</b> courses.</li>
-                    <li><b>Advanced Track:</b> Noted as unweighted per school policy.</li>
+                <h3 style="margin-top:0; color: var(--fire-red);">System Logic</h3>
+                <p style="font-size: 0.9rem;">This tracker follows Shalhevet High School grading standards. GPA is calculated by total points earned divided by total credits attempted.</p>
+                <ul style="font-size: 0.85rem; padding-left: 20px; color: var(--text-muted);">
+                    <li><b>Verification:</b> Precision rounding ensures $3.815 \rightarrow 3.82$.</li>
+                    <li><b>Weighting:</b> +1.0 point for Honors/SAS courses.</li>
+                    <li><b>Advanced:</b> Unweighted per school policy.</li>
                 </ul>
             </div>
             <div>
                 <table class="gpa-chart">
-                    <thead><tr><th>Grade</th><th>Unweighted</th><th>SAS/Honors</th></tr></thead>
+                    <thead><tr><th>Grade</th><th>Points</th><th>SAS/Honors</th></tr></thead>
                     <tbody>
                         <tr><td>A / A+</td><td>4.00</td><td>5.00</td></tr>
                         <tr><td>A-</td><td>3.67</td><td>4.67</td></tr>
@@ -126,24 +127,26 @@
                 </table>
             </div>
         </div>
-        <div class="disclaimer">
-            <b>Disclaimer:</b> This tool is for personal planning and estimation only. Official GPAs are calculated and verified exclusively by the Shalhevet Registrar. Individual course weights and credit values are subject to change based on the current course catalog.
-        </div>
     </div>
 </div>
 
 <datalist id="course-list"></datalist>
 
 <script>
-    const schoolCourses = ["English Composition", "English Composition (Honors)", "American Literature", "American Literature (Honors)", "Banned Books", "Banned Books (Honors)", "British Literature (SAS)", "Journalism (Honors/Reg)", "Creative Writing", "Film, Literature & Composition", "Film, Literature & Composition (Honors)", "Jewish Literature (SAS)", "World History", "US History", "US History (Honors)", "Civics (SAS)", "Civil War and Reconstruction (SAS)", "Eurasia (SAS)", "Economics (SAS)", "Medieval Jewish History (SAS)", "Positive Psychology", "Psychology (SAS)", "Topics in US History (SAS)", "US Government & Economics", "Biology", "Biology (SAS)", "Chemistry", "Chemistry (Honors)", "Chemistry (SAS)", "Physics", "Physics (SAS)", "Anatomy and Physiology (Honors)", "Biochemistry (SAS)", "Environmental Science", "Computer Science Principles (Honors)", "Computer Science (SAS)", "Computer Organization (SAS)", "Engineering", "Algebra 1", "Geometry", "Geometry (Advanced)", "Geometry (Honors)", "Algebra 2", "Algebra 2 (Advanced)", "Algebra 2 (Honors)", "Precalculus", "Precalculus (Advanced)", "Precalculus (Honors)", "Calculus", "Calculus (SAS)", "Statistics (SAS)", "Multivariable Calculus (SAS)", "Visual Art", "Art Comp & Design", "Art History (Honors)", "Studio Art (SAS)", "Drama", "Hebrew Language", "Hebrew Literature (Honors)", "Hebrew Film & Literature (SAS)", "Israeli Culture & Conversation", "Jewish History", "Modern Jewish History", "Israel Ed", "Israel Ed (SAS)", "Talmud 1", "Talmud 2", "Talmud 2 (Advanced)", "Talmud 3", "Talmud 3 (Advanced)", "Talmud 4", "Talmud 4 (Advanced)", "Tanach 1", "Tanach 2", "Tanach 2 (Advanced)", "Tanach 3", "Tanach 3 (Advanced)", "Tanach 4", "Jewish Philosophy", "Advanced Jewish Philosophy", "AGS (Advanced Gemara Shiur)", "BMT (Beit Midrash Track)"];
+    const schoolCourses = ["English Composition", "American Literature", "Banned Books", "British Literature (SAS)", "Journalism", "Creative Writing", "Film, Lit & Comp", "World History", "US History", "US History (Honors)", "Civics (SAS)", "Eurasia (SAS)", "Economics (SAS)", "Medieval Jewish History (SAS)", "Positive Psych", "Psychology (SAS)", "Biology (SAS)", "Chemistry (Honors)", "Chemistry (SAS)", "Physics (SAS)", "Anatomy (Honors)", "Engineering", "Algebra 1", "Geometry", "Geometry (Advanced)", "Algebra 2 (Honors)", "Precalculus (Advanced)", "Calculus (SAS)", "Statistics (SAS)", "Hebrew Language", "Hebrew Film (SAS)", "Jewish History", "Modern Jewish History", "Israel Ed (SAS)", "Talmud (Advanced)", "Tanach (Advanced)", "Jewish Philosophy", "AGS (Advanced Gemara Shiur)"];
     const gradeScale = { "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "F": 0.0 };
     const years = ["9th Grade", "10th Grade", "11th Grade", "12th Grade"];
 
-    let semesters = JSON.parse(localStorage.getItem('shalhevet_vFinal_v3')) || [];
+    let semesters = JSON.parse(localStorage.getItem('shalhevet_master_v5')) || [];
 
     function save() {
-        localStorage.setItem('shalhevet_vFinal_v3', JSON.stringify(semesters));
+        localStorage.setItem('shalhevet_master_v5', JSON.stringify(semesters));
         calculateAndRender();
+    }
+
+    // Precise Verify Function
+    function preciseRound(num) {
+        return Math.round((num + Number.EPSILON) * 100) / 100;
     }
 
     function addSemester() {
@@ -174,8 +177,8 @@
                 const wt = (c.isHonors && val >= 1.67) ? 1.0 : 0;
                 sCreds += cr; sUw += (val * cr); sW += ((val + wt) * cr);
             });
-            sem.semUw = sCreds ? (sUw / sCreds).toFixed(2) : "0.00";
-            sem.semW = sCreds ? (sW / sCreds).toFixed(2) : "0.00";
+            sem.semUw = sCreds ? preciseRound(sUw / sCreds).toFixed(2) : "0.00";
+            sem.semW = sCreds ? preciseRound(sW / sCreds).toFixed(2) : "0.00";
 
             if (!yearStats[sem.year]) yearStats[sem.year] = { creds: 0, uw: 0, w: 0 };
             yearStats[sem.year].creds += sCreds;
@@ -185,8 +188,8 @@
             totalCredits += sCreds; totalUwPts += sUw; totalWPts += sW;
         });
 
-        document.getElementById('overall-unweighted').innerText = totalCredits ? (totalUwPts / totalCredits).toFixed(2) : "0.00";
-        document.getElementById('overall-weighted').innerText = totalCredits ? (totalWPts / totalCredits).toFixed(2) : "0.00";
+        document.getElementById('overall-unweighted').innerText = totalCredits ? preciseRound(totalUwPts / totalCredits).toFixed(2) : "0.00";
+        document.getElementById('overall-weighted').innerText = totalCredits ? preciseRound(totalWPts / totalCredits).toFixed(2) : "0.00";
 
         renderMainContent(yearStats);
     }
@@ -194,18 +197,16 @@
     function renderMainContent(yearStats) {
         const container = document.getElementById('main-content');
         container.innerHTML = '';
-
         years.forEach(year => {
             const yearSems = semesters.filter(s => s.year === year);
             if (yearSems.length === 0) return;
-
             yearSems.forEach(sem => {
                 const semDiv = document.createElement('div');
                 semDiv.className = 'semester-card';
                 semDiv.innerHTML = `
                     <div class="sem-header">
                         <div class="sem-title-group">
-                            <div class="selector-box"><span class="selector-label">Grade</span>
+                            <div class="selector-box"><span class="selector-label">Grade Level</span>
                                 <select class="select-styled" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
                                     ${years.map(y => `<option value="${y}" ${sem.year === y ? 'selected' : ''}>${y}</option>`).join('')}
                                 </select>
@@ -218,8 +219,8 @@
                             </div>
                         </div>
                         <div style="display:flex; gap:10px; align-items:center">
-                            <div class="sem-badge">Sem UW: ${sem.semUw}</div>
-                            <div class="sem-badge">Sem W: ${sem.semW}</div>
+                            <div class="sem-badge">UW: ${sem.semUw}</div>
+                            <div class="sem-badge">W: ${sem.semW}</div>
                             <button class="btn-delete" onclick="deleteSem(${sem.id})">✕</button>
                         </div>
                     </div>
@@ -250,24 +251,22 @@
                     </div>`;
                 container.appendChild(semDiv);
             });
-
-            const yUw = (yearStats[year].uw / yearStats[year].creds).toFixed(2);
-            const yW = (yearStats[year].w / yearStats[year].creds).toFixed(2);
+            const yUw = preciseRound(yearStats[year].uw / yearStats[year].creds).toFixed(2);
+            const yW = preciseRound(yearStats[year].w / yearStats[year].creds).toFixed(2);
             const summaryDiv = document.createElement('div');
             summaryDiv.className = 'year-summary-bar';
             summaryDiv.innerHTML = `${year} TOTAL GPA <span>UW: ${yUw} | W: ${yW}</span>`;
             container.appendChild(summaryDiv);
         });
-
         document.getElementById('course-list').innerHTML = schoolCourses.map(c => `<option value="${c}">`).join('');
     }
 
     function updateSemInfo(id, f, v) { semesters.find(s => s.id === id)[f] = v; save(); }
     function addCourse(id) { semesters.find(s => s.id === id).courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false }); save(); }
     function deleteCourse(id, i) { semesters.find(s => s.id === id).courses.splice(i, 1); save(); }
-    function deleteSem(id) { if(confirm("Delete semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
-    function copyLink() { navigator.clipboard.writeText(window.location.href); alert("Link Copied!"); }
-    function clearAll() { if(confirm("Reset everything?")) { semesters = []; addSemester(); } }
+    function deleteSem(id) { if(confirm("Delete entire semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
+    function copyLink() { navigator.clipboard.writeText(window.location.href); alert("Tracker Link Copied!"); }
+    function clearAll() { if(confirm("Wipe all data?")) { semesters = []; addSemester(); } }
 
     if(semesters.length === 0) addSemester(); else calculateAndRender();
 </script>
