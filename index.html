@@ -1,193 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-4W5WZNQ6DR"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-4W5WZNQ6DR');
-    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shalhevet GPA Tracker | Official 25-26</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap" rel="stylesheet">
+    <title>Shalhevet GPA Master</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --fire-red: #cc0000; --black: #1a1a1a; --white: #ffffff; --bg: #f4f4f4; --border: #d1d1d1; --text-muted: #666666; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: var(--bg); color: var(--black); margin: 0; padding: 20px; line-height: 1.5; }
-        .container { max-width: 1050px; margin: 40px auto; }
-        .stats-bar { position: sticky; top: 20px; background: var(--black); padding: 25px; border-radius: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px; z-index: 1000; box-shadow: 0 15px 30px rgba(0,0,0,0.2); color: var(--white); }
-        .stat-item { text-align: center; border-right: 1px solid #444; }
-        .stat-item:last-child { border-right: none; }
-        .stat-value { font-size: 2.8rem; font-weight: 800; color: var(--fire-red); line-height: 1; }
-        .stat-label { font-size: 0.75rem; text-transform: uppercase; font-weight: 600; letter-spacing: 0.15em; margin-top: 5px; }
-        .year-summary-bar { background: #e2e2e2; border: 2px solid var(--black); padding: 15px 25px; border-radius: 12px; margin: -10px 0 35px 0; display: flex; justify-content: space-between; align-items: center; font-weight: 800; font-size: 0.95rem; text-transform: uppercase; }
-        .semester-card { background: var(--white); border-radius: 20px; margin-bottom: 25px; border: 1px solid var(--border); overflow: hidden; }
-        .sem-header { background: #fdfdfd; padding: 15px 32px; border-bottom: 2px solid var(--bg); display: flex; justify-content: space-between; align-items: center; }
-        .selector-label { font-size: 10px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; margin-bottom: 6px; }
-        .courses-container { padding: 25px 32px; }
-        .course-row { display: grid; grid-template-columns: 3.5fr 120px 100px 90px 40px; gap: 25px; margin-bottom: 20px; align-items: flex-end; }
-        input, select { background: var(--white); border: 1px solid var(--border); padding: 12px; border-radius: 8px; font-family: inherit; font-size: 0.9rem; width: 100%; box-sizing: border-box; }
-        .weight-toggle { display: flex; align-items: center; justify-content: center; border: 1px solid var(--border); height: 44px; border-radius: 8px; cursor: pointer; font-size: 10px; font-weight: 800; color: var(--text-muted); background: #f9f9f9; }
-        .weight-toggle:has(input:checked) { background: var(--fire-red); border-color: var(--fire-red); color: white; }
-        .weight-toggle input { display: none; }
-        .sem-stats-display { display: flex; gap: 15px; align-items: center; background: #f1f1f1; padding: 5px 15px; border-radius: 30px; border: 1px solid #ddd; }
-        .sem-stat-pill { font-size: 0.7rem; font-weight: 800; text-transform: uppercase; }
-        .sem-stat-pill span { color: var(--fire-red); }
-        button { cursor: pointer; border: none; border-radius: 10px; padding: 10px 18px; font-weight: 700; transition: 0.2s; }
-        .btn-add-sem { background: var(--fire-red); color: white; width: 100%; padding: 18px; font-size: 1rem; text-transform: uppercase; margin-bottom: 40px; }
-        .btn-add-course { background: transparent; color: var(--fire-red); border: 1px dashed var(--fire-red); width: 100%; margin-top: 5px; padding: 12px; }
-        .btn-delete { color: var(--text-muted); background: none; font-size: 1.2rem; height: 44px; display: flex; align-items: center; justify-content: center; }
+        :root { --fire-red: #cc0000; --black: #1a1a1a; --white: #ffffff; --bg: #f8f8f8; --border: #e0e0e0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); padding: 20px; color: var(--black); line-height: 1.6; }
+        .container { max-width: 1050px; margin: auto; }
+
+        /* Dashboard */
+        .dashboard { position: sticky; top: 20px; background: var(--black); color: white; padding: 25px; border-radius: 20px; display: flex; justify-content: space-around; align-items: center; z-index: 1000; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); }
+        .gpa-stat { text-align: center; flex: 1; }
+        .gpa-stat:first-child { border-right: 1px solid #444; }
+        .gpa-val { font-size: 3.2rem; font-weight: 800; color: var(--fire-red); line-height: 1; }
+        .gpa-label { font-size: 0.7rem; letter-spacing: 2px; text-transform: uppercase; margin-top: 8px; opacity: 0.8; }
+
+        /* Policy Info Card */
+        .info-card { background: white; padding: 20px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 30px; }
+        .info-card h3 { margin-top: 0; font-size: 13px; text-transform: uppercase; color: var(--fire-red); border-bottom: 2px solid var(--fire-red); display: inline-block; padding-bottom: 4px; margin-bottom: 15px; }
+        .info-list { font-size: 13px; color: #555; margin: 0; padding-left: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .info-list li { margin-bottom: 5px; }
+
+        /* Table UI */
+        .year-card { background: white; border: 1px solid var(--border); border-radius: 18px; margin-bottom: 35px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+        .year-header { background: #fdfdfd; padding: 18px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); }
+        .year-title { font-weight: 800; font-size: 1.1rem; }
+        
+        table { width: 100%; border-collapse: collapse; }
+        th { text-align: left; font-size: 10px; text-transform: uppercase; color: #999; padding: 12px 25px; border-bottom: 1px solid #f0f0f0; }
+        td { padding: 12px 25px; border-bottom: 1px solid #f5f5f5; }
+        
+        .sem-tag { background: #fff5f5; padding: 8px 25px; font-size: 11px; font-weight: 800; color: var(--fire-red); text-transform: uppercase; border-bottom: 1px solid #eee; }
+        
+        input, select { border: 1px solid #ddd; padding: 10px; border-radius: 8px; width: 100%; font-family: inherit; font-size: 14px; outline: none; transition: all 0.2s; }
+        input:focus { border-color: var(--fire-red); background: #fffcfc; }
+
+        .wt-toggle { cursor: pointer; padding: 8px; border-radius: 8px; font-size: 10px; font-weight: 800; text-align: center; background: #f0f0f0; border: 1px solid #ddd; user-select: none; transition: 0.2s; }
+        .wt-toggle.active { background: var(--fire-red); color: white; border-color: var(--fire-red); }
+        
+        .sem-footer { background: #fafafa; padding: 15px 25px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #eee; }
+        .sem-stats { display: flex; gap: 20px; font-size: 12px; font-weight: 700; color: #666; }
+        .btn-add { background: white; border: 1px dashed #ccc; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 700; color: #888; transition: 0.2s; }
+        .btn-add:hover { border-color: var(--fire-red); color: var(--fire-red); }
+
+        .del-btn { color: #ccc; cursor: pointer; border: none; background: none; font-size: 20px; transition: 0.2s; }
+        .del-btn:hover { color: var(--fire-red); }
+
+        .disclaimer-box { font-size: 11px; color: #999; text-align: center; padding: 40px 20px; border-top: 1px solid var(--border); margin-top: 20px; }
+        .reset-btn { display: block; margin: 0 auto; background: none; border: 1px solid #ffcccc; color: #cc0000; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 11px; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<datalist id="course-catalog">
-    <option value="English Composition"><option value="English Composition (Honors)"><option value="American Literature"><option value="American Literature (Honors)"><option value="Banned Books"><option value="Banned Books (Honors)"><option value="British Literature (SAS)"><option value="Creative Writing"><option value="Film, Literature & Composition"><option value="Film, Literature & Composition (Honors)"><option value="Jewish Literature (SAS)"><option value="Journalism (Honors/Regular)"><option value="World History"><option value="U.S. History"><option value="U.S. History (Honors)"><option value="Civics (SAS)"><option value="Civil War and Reconstruction (SAS)"><option value="Economics (SAS)"><option value="Eurasia (SAS)"><option value="Medieval Jewish History (SAS)"><option value="Positive Psychology"><option value="Psychology (SAS)"><option value="Topics in US History (SAS)"><option value="US Government & Economics"><option value="Biology"><option value="Biology (SAS)"><option value="Chemistry"><option value="Chemistry (Honors)"><option value="Chemistry (SAS)"><option value="Physics"><option value="Physics (SAS)"><option value="Anatomy and Physiology (Honors)"><option value="Biochemistry (SAS)"><option value="Environmental Science"><option value="Engineering"><option value="Computer Science Principles (Honors)"><option value="Introduction to Computer Science (Honors)"><option value="Computer Science (SAS)"><option value="Computer Organization (SAS)"><option value="Algebra 1"><option value="Algebra 2"><option value="Algebra 2 (Advanced)"><option value="Algebra 2 (Honors)"><option value="Geometry"><option value="Geometry (Advanced)"><option value="Geometry (Honors)"><option value="Precalculus"><option value="Precalculus (Advanced)"><option value="Precalculus (Honors)"><option value="Calculus"><option value="Calculus (SAS)"><option value="Multivariable Calculus (SAS)"><option value="Statistics (SAS)"><option value="Tanach 1"><option value="Tanach 1 (Advanced)"><option value="Tanach 2"><option value="Tanach 2 (Advanced)"><option value="Tanach 3"><option value="Tanach 3 (Advanced)"><option value="Tanach 4"><option value="Tanach 4 (Advanced)"><option value="Talmud 1"><option value="Talmud 1 (Advanced)"><option value="Talmud 2"><option value="Talmud 2 (Advanced)"><option value="Talmud 3"><option value="Talmud 3 (Advanced)"><option value="Talmud 4"><option value="Jewish History"><option value="Modern Jewish History"><option value="Israel Ed"><option value="Israel Ed (SAS)"><option value="Jewish Philosophy"><option value="Advanced Jewish Philosophy"><option value="AGS (Breakfast) Shiur"><option value="Beit Midrash Track (BMT)"><option value="Visual Art"><option value="The Art of Food and Culture"><option value="Art Composition & Design"><option value="Art History (Honors)"><option value="Drama"><option value="Studio Art (SAS)"><option value="Hebrew Language"><option value="Israeli Culture & Conversation"><option value="Hebrew Film & Literature (SAS)"><option value="Comparative Government"><option value="Halacha"><option value="Advanced Tanach Shiur (Bible Seminar)">
+<datalist id="catalog">
+    <option value="Tanakh 1">
+    <option value="Tanakh 1 (Advanced)">
+    <option value="Tanakh 2">
+    <option value="Tanakh 2 (Advanced)">
+    <option value="Tanakh 3">
+    <option value="Tanakh 3 (Advanced)">
+    <option value="Tanakh 4">
+    <option value="Tanakh 4 (Advanced)">
+    
+    <option value="Talmud 1">
+    <option value="Talmud 1 (Advanced)">
+    <option value="Talmud 2">
+    <option value="Talmud 2 (Advanced)">
+    <option value="Talmud 3">
+    <option value="Talmud 3 (Advanced)">
+    <option value="Talmud 4">
+    <option value="Talmud 4 (Advanced)">
+
+    <option value="Hebrew Language">
+    <option value="Hebrew Language (Honors)">
+
+    <option value="SAS Eurasia">
+    <option value="SAS Civil War & Reconstruction">
+    <option value="SAS World War II">
+    <option value="Civics">
+    <option value="Comparative Government">
+    <option value="U.S. History (Honors)">
+    <option value="World History">
+
+    <option value="Algebra 1">
+    <option value="Algebra 2">
+    <option value="Algebra 2 (Honors)">
+    <option value="Geometry">
+    <option value="Geometry (Honors)">
+    <option value="Precalculus">
+    <option value="Biology">
+    <option value="Chemistry">
+    <option value="Chemistry (Honors)">
+    <option value="English Composition">
+    <option value="English Composition (Honors)">
+    <option value="American Literature">
+    <option value="American Literature (Honors)">
+    <option value="British Literature (SAS)">
+    <option value="SAS Biology">
 </datalist>
 
 <div class="container">
-    <div style="text-align: center; margin-bottom: 30px;">
-        <h1 style="margin: 0; font-size: 2.2rem; font-weight: 800;">GPA <span style="color: var(--fire-red);">TRACKER</span></h1>
-        <p style="color: var(--text-muted); font-weight: 600; text-transform: uppercase; letter-spacing: 1px;">Shalhevet High School</p>
+    <div class="dashboard">
+        <div class="gpa-stat">
+            <div class="gpa-val" id="total-wt">0.00</div>
+            <div class="gpa-label">Weighted Cumulative</div>
+        </div>
+        <div class="gpa-stat">
+            <div class="gpa-val" id="total-reg">0.00</div>
+            <div class="gpa-label">Unweighted (REG)</div>
+        </div>
     </div>
 
-    <div class="stats-bar">
-        <div class="stat-item"><div class="stat-label">Cumulative UW</div><div class="stat-value" id="overall-unweighted">0.00</div></div>
-        <div class="stat-item"><div class="stat-label">Cumulative Weighted</div><div class="stat-value" id="overall-weighted">0.00</div></div>
+    <div class="info-card">
+        <h3>GPA Policy Overview</h3>
+        <ul class="info-list">
+            <li><strong>Unweighted (REG):</strong> Standard 4.0 scale.</li>
+            <li><strong>Weighted (WT):</strong> Extra 1.0 point for SAS/Honors.</li>
+            <li><strong>Advanced Track:</strong> Unweighted per school policy.</li>
+            <li><strong>Credits:</strong> Most semester courses are 0.5 credits.</li>
+        </ul>
     </div>
 
-    <div id="main-content"></div>
-    <button class="btn-add-sem" onclick="addSemester()">+ Add New Semester</button>
+    <div id="table-root"></div>
+
+    <button class="reset-btn" onclick="resetData()">Clear All Data</button>
+
+    <div class="disclaimer-box">
+        <strong>Disclaimer:</strong> Planning purposes only. Official GPA is determined by your transcript.
+    </div>
 </div>
 
 <script>
-    const gradeScale = { "A+": 4.0, "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "F": 0.0 };
-    const years = ["9th Grade", "10th Grade", "11th Grade", "12th Grade"];
-    let semesters = JSON.parse(localStorage.getItem('shalhevet_final_systemic')) || [];
+const scale = { "A+": 4.0, "A": 4.0, "A-": 3.67, "B+": 3.33, "B": 3.0, "B-": 2.67, "C+": 2.33, "C": 2.0, "C-": 1.67, "D+": 1.33, "D": 1.0, "D-": 0.67, "F": 0.0 };
 
-    function save() {
-        localStorage.setItem('shalhevet_final_systemic', JSON.stringify(semesters));
-        calculate();
-    }
+let data = JSON.parse(localStorage.getItem('shalhevet_save_final')) || [
+    { name: "9th Grade", s1: [], s2: [] },
+    { name: "10th Grade", s1: [], s2: [] },
+    { name: "11th Grade", s1: [], s2: [] },
+    { name: "12th Grade", s1: [], s2: [] }
+];
 
-    // SYSTEMIC ROUNDING ENGINE: 
-    // This forces any value ending in .005 or higher to round UP to the next hundredth.
-    function calculate() {
-        let totalCr = 0, totalPts = 0;
-        courses.forEach(c => {
-            const val = parseGrade(c.grade);
-            const cr = parseFloat(c.credits);
-            const bonus = c.weighted ? 1.0 : 0;
-            totalCr += cr;
-            totalPts += (val + bonus) * cr;
-        });
+function precisionRound(n) { return Math.round((n + 0.00001) * 100) / 100; }
 
-        const gpa = totalCr ? (totalPts / totalCr) : 0;
-        // Forced rounding to 2 decimal places
-        document.getElementById('gpa-display').innerText = (Math.round((gpa + Number.EPSILON) * 100) / 100).toFixed(2);
-        render();
-    }
-
-    function calculate() {
-        let totalCreds = 0, totalUwPts = 0, totalWPts = 0;
-        let yearStats = {};
-
-        semesters.forEach(sem => {
-            let sCr = 0, sUw = 0, sW = 0;
-            sem.courses.forEach(c => {
-                const cr = parseFloat(c.credits) || 0;
-                const pts = gradeScale[c.grade] || 0;
-                const wt = (c.isHonors && pts >= 1.67) ? 1.0 : 0;
-                sCr += cr; sUw += (pts * cr); sW += ((pts + wt) * cr);
+function calculate() {
+    let gW = 0, gU = 0, gCr = 0;
+    data.forEach(y => {
+        ['s1', 's2'].forEach(sK => {
+            let sw = 0, su = 0, scr = 0;
+            y[sK].forEach(c => {
+                let p = scale[c.grade] || 0;
+                let cr = parseFloat(c.credits) || 0;
+                su += (p * cr);
+                sw += ((p + (c.wt ? 1 : 0)) * cr);
+                scr += cr;
             });
-            sem.resUw = sCr ? (sUw / sCr) : 0;
-            sem.resW = sCr ? (sW / sCr) : 0;
-            if(!yearStats[sem.year]) yearStats[sem.year] = { cr: 0, uw: 0, w: 0 };
-            yearStats[sem.year].cr += sCr; yearStats[sem.year].uw += sUw; yearStats[sem.year].w += sW;
-            totalCreds += sCr; totalUwPts += sUw; totalWPts += sW;
+            y[sK + '_wt'] = scr > 0 ? (sw / scr) : 0;
+            y[sK + '_un'] = scr > 0 ? (su / scr) : 0;
+            gW += sw; gU += su; gCr += scr;
         });
+    });
+    document.getElementById('total-wt').innerText = precisionRound(gCr > 0 ? gW / gCr : 0).toFixed(2);
+    document.getElementById('total-reg').innerText = precisionRound(gCr > 0 ? gU / gCr : 0).toFixed(2);
+    localStorage.setItem('shalhevet_save_final', JSON.stringify(data));
+    render();
+}
 
-        document.getElementById('overall-unweighted').innerText = totalCreds ? formatGPA(totalUwPts / totalCreds) : "0.00";
-        document.getElementById('overall-weighted').innerText = totalCreds ? formatGPA(totalWPts / totalCreds) : "0.00";
-        render(yearStats);
-    }
-
-    function render(yearStats) {
-        const cont = document.getElementById('main-content');
-        cont.innerHTML = '';
-        years.forEach(y => {
-            const yearSems = semesters.filter(s => s.year === y);
-            if (!yearSems.length) return;
-            yearSems.forEach(sem => {
-                const div = document.createElement('div');
-                div.className = 'semester-card';
-                div.innerHTML = `
-                    <div class="sem-header">
-                        <div><span class="selector-label">Grade Level</span>
-                            <select style="width:auto;" onchange="updateSemInfo(${sem.id}, 'year', this.value)">
-                                ${years.map(yr => `<option value="${yr}" ${sem.year === yr ? 'selected' : ''}>${yr}</option>`).join('')}
-                            </select>
-                        </div>
-                        <div style="display:flex; gap:10px; align-items:center;">
-                            <div class="sem-stats-display">
-                                <div class="sem-stat-pill">REG: <span>${formatGPA(sem.resUw)}</span></div>
-                                <div class="sem-stat-pill">WT: <span>${formatGPA(sem.resW)}</span></div>
-                            </div>
-                            <button class="btn-delete" onclick="deleteSem(${sem.id})">✕</button>
-                        </div>
-                    </div>
-                    <div class="courses-container">
-                        ${sem.courses.map((c, i) => `
-                            <div class="course-row">
-                                <div><span class="selector-label">Course Name</span>
-                                    <input type="text" list="course-catalog" value="${c.name}" onchange="updateCourse(${sem.id}, ${i}, 'name', this.value)">
-                                </div>
-                                <div><span class="selector-label">Grade</span>
-                                    <select onchange="updateCourse(${sem.id}, ${i}, 'grade', this.value)">
-                                        ${Object.keys(gradeScale).map(g => `<option ${c.grade === g ? 'selected' : ''}>${g}</option>`).join('')}
-                                    </select>
-                                </div>
-                                <div><span class="selector-label">Credits</span>
-                                    <select onchange="updateCourse(${sem.id}, ${i}, 'credits', this.value)">
-                                        <option value="0.5" ${c.credits == 0.5 ? 'selected' : ''}>0.5</option>
-                                        <option value="0.25" ${c.credits == 0.25 ? 'selected' : ''}>0.25</option>
-                                        <option value="1.0" ${c.credits == 1.0 ? 'selected' : ''}>1.0</option>
-                                    </select>
-                                </div>
-                                <div><span class="selector-label">Weight</span>
-                                    <label class="weight-toggle">
-                                        <input type="checkbox" ${c.isHonors ? 'checked' : ''} onchange="updateCourse(${sem.id}, ${i}, 'isHonors', this.checked)">
-                                        ${c.isHonors ? 'SAS/HON' : 'REGULAR'}
-                                    </label>
-                                </div>
-                                <button class="btn-delete" onclick="deleteCourse(${sem.id}, ${i})">✕</button>
-                            </div>
+function render() {
+    const root = document.getElementById('table-root');
+    root.innerHTML = data.map((y, yI) => `
+        <div class="year-card">
+            <div class="year-header"><span class="year-title">${y.name}</span></div>
+            ${['s1', 's2'].map(sK => `
+                <div class="sem-tag">${sK === 's1' ? 'Semester 1' : 'Semester 2'}</div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Course</th><th width="120">Grade</th><th width="110">Credits</th><th width="100">Weight</th><th width="40"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${y[sK].map((c, cI) => `
+                            <tr>
+                                <td><input type="text" list="catalog" value="${c.name}" placeholder="Type or select..." oninput="update(${yI},'${sK}',${cI},'name',this.value)"></td>
+                                <td><select onchange="update(${yI},'${sK}',${cI},'grade',this.value)">
+                                    ${Object.keys(scale).map(g => `<option ${c.grade==g?'selected':''}>${g}</option>`).join('')}
+                                </select></td>
+                                <td><select onchange="update(${yI},'${sK}',${cI},'credits',this.value)">
+                                    <option value="0.5" ${c.credits==0.5?'selected':''}>0.50</option>
+                                    <option value="0.25" ${c.credits==0.25?'selected':''}>0.25</option>
+                                    <option value="1.0" ${c.credits==1.0?'selected':''}>1.00</option>
+                                </select></td>
+                                <td><div class="wt-toggle ${c.wt?'active':''}" onclick="toggle(${yI},'${sK}',${cI})">${c.wt?'WT':'REG'}</div></td>
+                                <td><button class="del-btn" onclick="del(${yI},'${sK}',${cI})">×</button></td>
+                            </tr>
                         `).join('')}
-                        <button class="btn-add-course" onclick="addCourse(${sem.id})">+ Add Course</button>
-                    </div>`;
-                cont.appendChild(div);
-            });
-            const yDiv = document.createElement('div');
-            yDiv.className = 'year-summary-bar';
-            yDiv.innerHTML = `${y} TOTAL <span style="color:var(--fire-red);">UW: ${formatGPA(yearStats[y].uw / yearStats[y].cr)} | W: ${formatGPA(yearStats[y].w / yearStats[y].cr)}</span>`;
-            cont.appendChild(yDiv);
-        });
-    }
+                    </tbody>
+                </table>
+                <div class="sem-footer">
+                    <div class="sem-stats">
+                        <span>WT: ${precisionRound(y[sK+'_wt']).toFixed(2)}</span>
+                        <span>REG: ${precisionRound(y[sK+'_un']).toFixed(2)}</span>
+                    </div>
+                    <button class="btn-add" onclick="add(${yI},'${sK}')">+ Add Course</button>
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
 
-    function updateSemInfo(id, f, v) { semesters.find(s => s.id === id)[f] = v; save(); }
-    function addCourse(id) { semesters.find(s => s.id === id).courses.push({ name: '', grade: 'A', credits: 0.5, isHonors: false }); save(); }
-    function deleteCourse(id, i) { semesters.find(s => s.id === id).courses.splice(i, 1); save(); }
-    function deleteSem(id) { if(confirm("Delete semester?")) { semesters = semesters.filter(s => s.id !== id); save(); } }
-    function addSemester() { const lastYear = semesters.length > 0 ? semesters[semesters.length-1].year : years[0]; semesters.push({ id: Date.now(), year: lastYear, courses: [{ name: '', grade: 'A', credits: 0.5, isHonors: false }] }); save(); }
-    function updateCourse(semId, idx, field, value) { 
-        const sem = semesters.find(s => s.id === semId); 
-        sem.courses[idx][field] = (field === 'isHonors') ? value : value; 
-        if (field === 'name') { if (value.toUpperCase().includes('SAS') || value.toUpperCase().includes('HONORS')) sem.courses[idx].isHonors = true; }
-        save(); 
+function update(yI, sK, cI, f, v) { 
+    data[yI][sK][cI][f] = v; 
+    if(f === 'name') {
+        let n = v.toUpperCase();
+        // Weighting rules: include SAS/Honors, EXCLUDE Advanced
+        data[yI][sK][cI].wt = (n.includes('SAS') || n.includes('HONORS')) && !n.includes('ADVANCED');
     }
+    calculate(); 
+}
+function toggle(yI, sK, cI) { data[yI][sK][cI].wt = !data[yI][sK][cI].wt; calculate(); }
+function add(yI, sK) { data[yI][sK].push({name:'', grade:'A', credits:0.5, wt:false}); calculate(); }
+function del(yI, sK, cI) { data[yI][sK].splice(cI, 1); calculate(); }
+function resetData() { if(confirm("Permanently clear all saved data?")) { localStorage.clear(); location.reload(); } }
 
-    if(!semesters.length) addSemester(); else calculate();
+calculate();
 </script>
 </body>
 </html>
