@@ -73,11 +73,20 @@
 
     // SYSTEMIC ROUNDING ENGINE: 
     // This forces any value ending in .005 or higher to round UP to the next hundredth.
-    function formatGPA(num) {
-        if (!num || isNaN(num)) return "0.00";
-        // We add a tiny nudge (epsilon) and multiply by 100 to shift decimals, 
-        // then use standard Math.round which ensures 0.5 rounds UP.
-        return (Math.round((num + Number.EPSILON) * 100) / 100).toFixed(2);
+    function calculate() {
+        let totalCr = 0, totalPts = 0;
+        courses.forEach(c => {
+            const val = parseGrade(c.grade);
+            const cr = parseFloat(c.credits);
+            const bonus = c.weighted ? 1.0 : 0;
+            totalCr += cr;
+            totalPts += (val + bonus) * cr;
+        });
+
+        const gpa = totalCr ? (totalPts / totalCr) : 0;
+        // Forced rounding to 2 decimal places
+        document.getElementById('gpa-display').innerText = (Math.round((gpa + Number.EPSILON) * 100) / 100).toFixed(2);
+        render();
     }
 
     function calculate() {
